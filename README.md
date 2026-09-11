@@ -1,10 +1,58 @@
-# Biotech-Sequence-Suite: Molecular Diagnostic & Genomic Analysis Tool
-A Python-based bioinformatics suite designed for automated DNA-to-protein translation and molecular diagnostics. This tool features a specialized scanner for the HBB gene to detect Sickle Cell Anemia (HbS) by identifying the Glu6Val mutation at the 6th amino acid position. It also includes genomic metrics calculation (GC Content) and noise-filtering for raw genetic data, providing a robust interface for clinical and research-oriented sequence analysis.
-Key Features:
-Molecular Diagnostic Engine: Automated detection of pathogenic mutations in the Hemoglobin Beta (HBB) gene.
+# Biotech Sequence Suite: Genomic Analysis & HBB Molecular Diagnostic Engine
 
-Standardized Translation: Precise DNA-to-Protein mapping using universal genetic code dictionaries.
+**Biotech Sequence Suite** is a bioinformatics Python tool designed for DNA sequence processing, translation, and diagnostic analysis. The system is optimized to run in cloud environments such as Google Colab and features an interactive web Graphical User Interface (GUI) powered by Gradio.
 
-Genomic Metrics: Real-time calculation of GC Content and sequence length for stability analysis.
+---
 
-Interactive CLI: A user-friendly command-line interface for seamless data input and analysis protocols.
+## 🌟 Key Features
+
+* **Rapid DNA Sanitization:** Non-genomic noise filtering using regular expressions (`regex`) to standardize sequences to upper-case canonical bases.
+* **6-Reading Frame Translation:** Automatic generation of primary amino acid structures across all three forward reading frames ($+1, +2, +3$) and three reverse-complement frames ($-1, -2, -3$).
+* **$HBB$ Molecular Diagnostic Engine:** Variant detection at the critical Position 6 of the Human Beta-Globin gene, featuring dynamic index offset logic to account for the initiator Methionine ($M$).
+* **Web-Based Interactive GUI:** Real-time deployment using Gradio components inside Google Colab for fast sequence input and clinical report visualization.
+
+---
+
+## 🧬 Diagnostic Logic ($HBB$ Gene)
+
+The diagnostic module evaluates Position 6 of the $HBB$ gene (adjusted to Position 7 when the sequence includes the start codon `ATG` / Methionine):
+
+| Phenotype / Condition | Amino Acid at Key Position | Representative Codon | Clinical Classification |
+| :--- | :---: | :---: | :--- |
+| **HbA (Wild Type)** | Glutamic Acid (`E`) | `GAG` / `GAA` | **Normal:** Fully functional Beta-Globin chain. |
+| **HbS (Sickle Cell Anemia)** | Valine (`V`) | `GTG` / `GTT` | **Pathogenic (Glu6Val):** Promotes HbS polymerization and erythrocyte sickling. |
+| **HbC (Hemoglobin C Disease)** | Lysine (`K`) | `AAG` / `AAA` | **Pathogenic (Glu6Lys):** Leads to hemoglobin crystallization and mild-to-moderate hemolytic anemia. |
+
+---
+
+## 🛠️ Code Architecture
+
+The project is structured into modular functional blocks:
+
+1. **Genetic Mapping:** Optimized standard genetic code dictionary mapping DNA triplets to amino acid residues.
+2. **Processing Engine:**
+   * `clean_sequence()`: Filters non-canonical bases using `[^ATGC]`.
+   * `translate_dna()`: Translates triplets into primary peptide sequences.
+   * `get_reverse_complement()`: Generates reverse-complementary antiparallel DNA strands.
+   * `translate_6_frames()`: Computes all $+1, +2, +3, -1, -2, -3$ reading frames in parallel.
+3. **Molecular Diagnostic Engine:** `run_hbb_diagnostic()` evaluates specific biomarkers and generates structured diagnostic reports.
+4. **GUI Engine:** Interactive web layout deployed seamlessly via Gradio.
+
+---
+
+## 🚀 Execution Guide (Google Colab)
+
+1. Open a new notebook in **Google Colab**.
+2. Paste and run the core engine script in **Cell 1**.
+3. Paste and run the Gradio interface script in **Cell 2**.
+4. Click the generated public URL or interact directly with the web GUI embedded inside the notebook.
+
+---
+
+## 📊 Test Cases
+
+You can test the suite using the following control sequences:
+
+* **HbA Sample (Wild Type):** `ATGGTGCACCTGACTCCTGAGGAGAAGTCTGCCGTTACT`
+* **HbS Sample (Sickle Cell):** `ATGGTGCACCTGACTCCTGTGGAGAAGTCTGCCGTTACT`
+* **HbC Sample (Hemoglobin C):** `ATGGTGCACCTGACTCCTAAGGAGAAGTCTGCCGTTACT`
